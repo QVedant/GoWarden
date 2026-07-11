@@ -1,0 +1,14 @@
+# Go
+bin/
+*.exe
+*.test
+*.out
+
+# nsjail build artifacts (once you build it later)
+nsjail/nsjail
+
+.vscode/
+
+.DS_Store
+
+.env
