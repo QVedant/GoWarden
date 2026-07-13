@@ -1,7 +1,18 @@
-#Yaml Indentation Tutorial
+languages:
+  python:
+    display_name: "Python 3"
+    extension: ".py"
+    compile: []
+    run: ["python3", "{file}"]
+    timeout_seconds: 5
+    memory_mb: 128
+    image_toolchain: "python3.11"     #might use later. Which docker structure to be used?
 
-
-team: MI
-Members:
-  - SKY
-  - Tilak
+  c:
+    display_name: "C (GCC)"
+    extension: ".c"
+    compile: ["gcc", "-O2", "-o", "{binary}", "{file}"]
+    run: ["{binary}"]
+    timeout_seconds: 5
+    memory_mb: 128
+    image_toolchain: "gcc"
