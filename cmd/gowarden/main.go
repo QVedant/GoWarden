@@ -19,7 +19,7 @@ func main() {
 
 	addr := ":8080"
 	log.Printf("GoWarden listening on %s", addr)
-	if err := http.ListenAndServe(addr, srv); err != nil {
+	if err := http.ListenAndServe(addr, srv.Router); err != nil {
 		log.Fatalf("server error: %v", err)
 	}
 }

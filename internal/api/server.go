@@ -4,32 +4,36 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/QVedant/GoWarden/internal/registry"
 )
 
 type Server struct {
-	reg *registry.Registry
-	mux *http.ServeMux
+	reg    *registry.Registry
+	Router *chi.Mux
 }
 
 func NewServer(reg *registry.Registry) *Server {
 	s := &Server{
-		reg: reg,
-		mux: http.NewServeMux(),
+		reg:    reg,
+		Router: chi.NewRouter(),
 	}
+
+	s.Router.Use(middleware.Logger)
+	s.Router.Use(middleware.Recoverer)
+	s.Router.Use(middleware.Timeout(10 * time.Second))
+
 	s.routes()
 	return s
 }
 
 func (s *Server) routes() {
-	s.mux.HandleFunc("GET /healthz", s.handleHealth)
-	s.mux.HandleFunc("GET /languages", s.handleLanguages)
-	// POST /run comes once the executor + nsjail integration exists.
-}
-
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.mux.ServeHTTP(w, r)
+	s.Router.Get("/healthz", s.handleHealth)
+	s.Router.Get("/languages", s.handleLanguages)
 }
 
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
